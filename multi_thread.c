@@ -22,7 +22,7 @@ void* thread_sum(void* arg) {
 }
 
 int main() {
-    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 35}; // Sample data
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25}; // Sample data
     int size = sizeof(arr) / sizeof(arr[0]);
     pthread_t threads[NUM_THREADS];
     ThreadData thread_data[NUM_THREADS];
@@ -38,12 +38,13 @@ int main() {
         thread_data[i].start = i * segment_size;
         thread_data[i].end = (i == NUM_THREADS - 1) ? size : (i + 1) * segment_size;
         pthread_create(&threads[i], NULL, thread_sum, &thread_data[i]);
+        pthread_join(threads[i], NULL);
     }
 
     // Wait for threads to complete and combine results
     int total = 0;
     for (int i = 0; i < NUM_THREADS; i++) {
-        pthread_join(threads[i], NULL);
+        //
         total += thread_data[i].sum;
     }
 
